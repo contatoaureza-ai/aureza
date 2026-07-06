@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { supabase } from "../lib/supabaseClient";
 import { fontSerif, fontSans } from "../theme/tokens";
 
 const COLORS = {
@@ -15,18 +14,27 @@ const COLORS = {
 };
 
 export default function LoginPage() {
-  const { signIn } = useAuth();
+  const { signIn, session, role } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Aguarda o AuthContext confirmar a sessão e carregar o role (evita uma
+  // race condition ao consultar profiles logo após o signIn, que às vezes
+  // redirecionava um admin para /catalogo por engano).
+  useEffect(() => {
+    if (loading && session && role) {
+      navigate(role === "admin" ? "/admin" : "/catalogo");
+    }
+  }, [loading, session, role, navigate]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
-    const { data, error: signInError } = await signIn(email, password);
+    const { error: signInError } = await signIn(email, password);
     if (signInError) {
       const isNetworkError = !signInError.status || /fetch/i.test(signInError.message || "");
       setError(
@@ -35,14 +43,7 @@ export default function LoginPage() {
           : "E-mail ou senha incorretos."
       );
       setLoading(false);
-      return;
     }
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", data.user.id)
-      .single();
-    navigate(profile && profile.role === "admin" ? "/admin" : "/catalogo");
   };
 
   const inputStyle = {
