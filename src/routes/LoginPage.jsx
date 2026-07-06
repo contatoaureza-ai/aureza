@@ -28,7 +28,12 @@ export default function LoginPage() {
     setLoading(true);
     const { data, error: signInError } = await signIn(email, password);
     if (signInError) {
-      setError("E-mail ou senha incorretos.");
+      const isNetworkError = !signInError.status || /fetch/i.test(signInError.message || "");
+      setError(
+        isNetworkError
+          ? "Não foi possível conectar ao Supabase. Verifique se VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY estão configurados neste ambiente."
+          : "E-mail ou senha incorretos."
+      );
       setLoading(false);
       return;
     }
