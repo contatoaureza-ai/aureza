@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "aureza-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--prefix", ".."],
+      "port": 5173,
+      "autoPort": true
+    }
+  ]
+}

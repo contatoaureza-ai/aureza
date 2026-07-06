@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import {
   MapPin,
   Building2,
@@ -281,6 +282,23 @@ export default function App() {
               </button>
             ))}
           </nav>
+          <Link
+            to="/login"
+            className="aureza-cta-desktop"
+            onMouseEnter={() => setHover("nav-entrar", true)}
+            onMouseLeave={() => setHover("nav-entrar", false)}
+            style={{
+              display: "none",
+              fontFamily: fontSans,
+              fontSize: "0.875rem",
+              letterSpacing: "0.02em",
+              color: hoverState["nav-entrar"] ? COLORS.gold : COLORS.navLink,
+              textDecoration: "none",
+              transition: "color 0.3s ease",
+            }}
+          >
+            Entrar
+          </Link>
           <button
             onClick={() => scrollTo("formulario")}
             className="aureza-cta-desktop"
@@ -351,6 +369,20 @@ export default function App() {
                 {item[0]}
               </button>
             ))}
+            <Link
+              to="/login"
+              onClick={() => setMenuOpen(false)}
+              style={{
+                textAlign: "left",
+                padding: "4px 0",
+                color: COLORS.gold,
+                fontFamily: fontSans,
+                fontSize: "0.95rem",
+                textDecoration: "none",
+              }}
+            >
+              Entrar
+            </Link>
           </div>
         )}
       </header>
