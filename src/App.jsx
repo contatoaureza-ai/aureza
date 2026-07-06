@@ -222,7 +222,16 @@ export default function App() {
   ];
 
   return (
-    <div style={{ background: COLORS.cream, color: COLORS.black, fontFamily: fontSans, width: "100%" }}>
+    <div
+      style={{
+        background: COLORS.cream,
+        color: COLORS.black,
+        fontFamily: fontSans,
+        width: "100%",
+        minHeight: "100vh",
+        overflowX: "hidden",
+      }}
+    >
       {/* HEADER */}
       <header
         style={{
