@@ -106,8 +106,13 @@ drop policy if exists terrenos_admin_all on terrenos;
 create policy terrenos_admin_all on terrenos
   for all using (is_admin()) with check (is_admin());
 
--- Defesa em profundidade: revoga privilégios de tabela além do RLS.
-revoke all on terrenos from authenticated, anon;
+-- Defesa em profundidade para usuários anônimos (nunca devem tocar a tabela base).
+-- Não revogar de "authenticated": o próprio admin é um usuário "authenticated" e
+-- precisa do grant de tabela — é a policy is_admin() acima que já restringe as
+-- linhas visíveis; incorporador (também "authenticated") continua sem acesso a
+-- nenhuma linha porque nenhuma policy o contempla (deny-by-default do RLS).
+revoke all on terrenos from anon;
+grant select, insert, update, delete on terrenos to authenticated;
 
 -- ============================================================
 -- VISTA PÚBLICA (catálogo) — somente colunas sanitizadas, somente publicados

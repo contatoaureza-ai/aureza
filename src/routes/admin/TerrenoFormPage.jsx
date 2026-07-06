@@ -72,6 +72,11 @@ export default function TerrenoFormPage() {
     delete payload.created_at;
     delete payload.updated_at;
 
+    const numericFields = ["superficie_m2", "preco_pedido", "area_poligono_m2", "lat", "lng"];
+    numericFields.forEach((field) => {
+      if (payload[field] === "" || payload[field] === undefined) payload[field] = null;
+    });
+
     let resultError;
     if (isNew) {
       payload.created_by = user.id;
